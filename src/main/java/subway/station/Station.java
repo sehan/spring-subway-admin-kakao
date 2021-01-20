@@ -9,6 +9,10 @@ public class Station {
     public Station() {
     }
 
+    private Station(Long id){
+        this.id = id;
+    }
+
     public Station(Long id, String name) {
         this.id = id;
         this.name = name;
@@ -18,9 +22,11 @@ public class Station {
         this.name = name;
     }
 
+    public static Station ref(Long id) { return new Station(id); }
     public static Station of(String name) {
         return new Station(name);
     }
+    public static Station of(Long id, String name) { return new Station(id, name); }
 
     public Long getId() {
         return id;
@@ -35,12 +41,13 @@ public class Station {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Station station = (Station) o;
-        return Objects.equals(id, station.id) && Objects.equals(name, station.name);
+        return Objects.equals(id, station.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name);
+        return Objects.hash(id);
     }
+
 }
 

@@ -1,5 +1,6 @@
 package subway.line;
 
+import subway.line.model.Line;
 import subway.station.StationResponse;
 
 import java.util.List;
@@ -16,6 +17,15 @@ public class LineResponse {
         this.name = name;
         this.color = color;
         this.stations = stations;
+    }
+
+    private LineResponse(String name, String color) {
+        this.name = name;
+        this.color = color;
+    }
+
+    public static LineResponse from(Line line) {
+        return new LineResponse(line.getName(), line.getColor());
     }
 
     public Long getId() {

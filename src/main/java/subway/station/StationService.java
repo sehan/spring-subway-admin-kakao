@@ -2,7 +2,7 @@ package subway.station;
 
 import java.util.List;
 
-interface StationService {
+public interface StationService {
 
     Station get(Long id);
 

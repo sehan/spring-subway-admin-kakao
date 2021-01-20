@@ -5,4 +5,9 @@
         </encoder>
     </appender>
     <appender-ref ref="STDOUT" />
+
+    <logger name="org.springframework.jdbc.core.JdbcTemplate">
+        <level value="debug" />
+    </logger>
+
 </configuration>
