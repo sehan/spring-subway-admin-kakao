@@ -6,10 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
-import subway.line.jdbc.SectionTemplate;
-import subway.line.model.Line;
-import subway.line.model.Section;
-import subway.station.Station;
+import subway.web.line.jdbc.SectionTemplate;
+import subway.core.Line;
+import subway.core.Section;
+import subway.core.Station;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

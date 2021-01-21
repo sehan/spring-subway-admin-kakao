@@ -9,7 +9,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import subway.AcceptanceTest;
-import subway.station.StationResponse;
+import subway.web.line.LineResponse;
+import subway.web.line.SectionRequest;
+import subway.web.station.StationResponse;
 
 import java.util.Arrays;
 import java.util.List;
@@ -18,7 +20,7 @@ import java.util.stream.Collectors;
 import static org.assertj.core.api.Assertions.assertThat;
 import static subway.line.LineAcceptanceTest.지하철_노선_등록되어_있음;
 import static subway.line.LineAcceptanceTest.지하철_노선_조회_요청;
-import static subway.station.StationAcceptanceTest.지하철역_등록되어_있음;
+import static subway.web.station.StationAcceptanceTest.지하철역_등록되어_있음;
 
 @DisplayName("지하철 구간 관련 기능")
 public class SectionAcceptanceTest extends AcceptanceTest {

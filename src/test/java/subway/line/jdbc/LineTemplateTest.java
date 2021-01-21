@@ -6,10 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
-import subway.line.model.Line;
-import subway.line.model.Section;
-import subway.station.Station;
-import subway.station.jdbc.StationTemplate;
+import subway.core.Line;
+import subway.core.Section;
+import subway.web.line.jdbc.LineTemplate;
+import subway.web.line.jdbc.SectionTemplate;
+import subway.core.Station;
+import subway.web.station.jdbc.StationTemplate;
 
 import java.util.List;
 
