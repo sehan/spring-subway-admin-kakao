@@ -4,13 +4,10 @@ import java.util.Objects;
 
 public class Section {
 
-    private long id;
+    private Long id;
     private Station upStation;
     private Station downStation;
     private long distance;
-
-    private Section prev;
-    private Section next;
 
     public Section(long upStationId, long downStationId, long distance) {
         this(Station.ref(upStationId), Station.ref(downStationId), distance);
@@ -41,21 +38,16 @@ public class Section {
         return new Section(id, upStation, downStation, distance);
     }
 
-
-    public boolean hasNext(){
-        return next != null;
-    }
-
-    public boolean hasPrev(){
-        return prev != null;
-    }
-
     public Station getUpStation() {
         return upStation;
     }
 
     public Station getDownStation() {
         return downStation;
+    }
+
+    public long getId() {
+        return id;
     }
 
     public long getDistance() {
@@ -98,5 +90,9 @@ public class Section {
                 ", downStation=" + downStation +
                 ", distance=" + distance +
                 '}';
+    }
+
+    public boolean hasId() {
+        return Objects.nonNull(id);
     }
 }

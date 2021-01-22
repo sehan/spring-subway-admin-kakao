@@ -22,7 +22,6 @@ public class LineTemplate {
         this.template = template;
     }
 
-
     public Line save(Line newLine) {
         LineEntity entity = LineEntity.transientInstance(newLine);
         SimpleJdbcInsert insert = new SimpleJdbcInsert(template)
@@ -41,12 +40,12 @@ public class LineTemplate {
 
     private Line findById(long lineId, boolean fetch) {
         LineEntity line = template.queryForObject("select * from LINE where id = ?",
-                RowMappers.line,
+                RowMappers.lineEntity,
                 lineId);
 
         if( fetch ) {
             List<SectionEntity> sections = template.query("select * from SECTION where line_id = ?",
-                    RowMappers.section,
+                    RowMappers.sectionEntity,
                     lineId);
             List<Long> stationIds = sections.stream()
                     .flatMap(section -> Stream.of(section.getUpStationId(), section.getDownStationId()))
@@ -55,17 +54,21 @@ public class LineTemplate {
             NamedParameterJdbcTemplate ntemplate = new NamedParameterJdbcTemplate(template);
             List<StationEntity> stations = ntemplate.query("select * from STATION where id in (:ids)",
                     new MapSqlParameterSource("ids", stationIds),
-                    RowMappers.station);
+                    RowMappers.stationEntity);
 
-            return line.toModel(stations);
+            return line.toModel(sections, stations);
         }
         return line.toModel();
     }
 
     public List<Line> findAll() {
-        List<LineEntity> entities = template.query("select * from LINE", RowMappers.line);
+        List<LineEntity> entities = template.query("select * from LINE", RowMappers.lineEntity);
         return entities.stream()
                 .map(entity -> entity.toModel())
                 .collect(Collectors.toList());
+    }
+
+    public void deleteById(Long lineId) {
+        template.update("delete from LINE where id = ?", lineId);
     }
 }

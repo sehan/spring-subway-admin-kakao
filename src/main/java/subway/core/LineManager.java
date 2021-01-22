@@ -11,7 +11,10 @@ public interface LineManager {
 
     List<Line> getAll();
 
+    @Deprecated
     Line addSection(Long lineId, Section section);
+
+    Line addSection(Long lineId, Station upStation, Station downStation, long distance);
 
     Line removeSection(Long lineId, Station station);
 

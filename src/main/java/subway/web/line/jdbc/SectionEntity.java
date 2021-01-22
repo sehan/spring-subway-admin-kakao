@@ -1,8 +1,10 @@
 package subway.web.line.jdbc;
 
-import subway.core.Line;
 import subway.core.Section;
 import subway.core.Station;
+import subway.web.station.StationEntity;
+
+import java.util.Objects;
 
 public class SectionEntity {
 
@@ -12,7 +14,7 @@ public class SectionEntity {
     private Long downStationId;
     private Long distance;
 
-    public SectionEntity(){};
+    private SectionEntity() { }
 
     SectionEntity(long id, long lineId, long upStationId, long downStationId, long distance) {
         this.id = id;
@@ -49,13 +51,33 @@ public class SectionEntity {
         return distance;
     }
 
-    public static SectionEntity of(Line line, Section section) {
+    public boolean hasId() {
+        return Objects.nonNull(id);
+    }
+
+    public static SectionEntity transientInstance(long lineId, Section section) {
         return new SectionEntity(
-                line.getId(),
+                lineId,
                 section.getUpStation().getId(),
                 section.getDownStation().getId(),
                 section.getDistance()
         );
+    }
+
+    public static SectionEntity persistInstance(long lineId, Section section) {
+        return new SectionEntity(
+                section.getId(),
+                lineId,
+                section.getUpStation().getId(),
+                section.getDownStation().getId(),
+                section.getDistance()
+        );
+    }
+
+    public static SectionEntity of(long lineId, Section section) {
+        if (section.hasId())
+            return persistInstance(lineId, section);
+        return transientInstance(lineId, section);
     }
 
     public Section toModel() {
@@ -63,6 +85,15 @@ public class SectionEntity {
                 id,
                 Station.ref(upStationId),
                 Station.ref(downStationId),
+                distance
+        );
+    }
+
+    public Section toModel(StationEntity upStation, StationEntity downStation) {
+        return Section.of(
+                id,
+                upStation.toModel(),
+                downStation.toModel(),
                 distance
         );
     }

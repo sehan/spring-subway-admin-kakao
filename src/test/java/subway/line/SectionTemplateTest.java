@@ -1,15 +1,20 @@
 package subway.line;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
-import subway.web.line.jdbc.SectionTemplate;
+import org.springframework.transaction.annotation.Transactional;
 import subway.core.Line;
 import subway.core.Section;
 import subway.core.Station;
+import subway.web.line.jdbc.SectionTemplate;
+import subway.web.station.jdbc.StationTemplate;
+
+import java.util.Arrays;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -21,16 +26,18 @@ class SectionTemplateTest {
     JdbcTemplate jdbcTemplate;
 
     SectionTemplate template;
+    StationTemplate stationTemplate;
 
     @BeforeEach
-    void setUp(){
+    void setUp() {
         template = new SectionTemplate(jdbcTemplate);
+        stationTemplate = new StationTemplate(jdbcTemplate);
     }
 
 
     @Test
-    void 섹션_저장(){
-        Line line = Line.of(1L,"인덕원선","blue", null);
+    void 섹션_저장() {
+        Line line = Line.of(1L, "인덕원선", "blue");
         Section section = Section.of(5L, 6L, 10);
         Section persist = template.save(line, section);
 
@@ -40,5 +47,52 @@ class SectionTemplateTest {
                 .hasFieldOrPropertyWithValue("downStation", Station.ref(6L))
                 .hasFieldOrPropertyWithValue("distance", 10L);
     }
+
+    @DisplayName("하나이상의 섹션저장 ( insert / update )")
+    @Transactional
+    @Test
+    void 다수섹션_저장2() {
+        // Given
+        Station 영통역 = Station.of("영통역");
+        Station 서천역 = Station.of("서천역");
+        Station 동탄역 = Station.of("동탄역");
+        Station 경희역 = Station.of("경희역");
+        영통역 = stationTemplate.save(영통역);
+        경희역 = stationTemplate.save(경희역);
+        서천역 = stationTemplate.save(서천역);
+        동탄역 = stationTemplate.save(동탄역);
+
+
+        Section s1 = Section.of(영통역, 서천역, 5);
+        Section s2 = Section.of(서천역, 동탄역, 5);
+
+        Line line = Line.of(1L, "인덕원선", "blue");
+        s1 = template.save(line, s1);
+        s2 = template.save(line, s2);
+
+        // When
+        Section s3 = Section.of(경희역, 서천역, 2);
+        s1.changeDownStation(경희역, 2);
+        s2.changeUpStation(경희역, 2);
+
+        template.saveAll(line, Arrays.asList(s1, s2, s3));
+
+        // Then
+        assertThat(template.findById(s1.getId()))
+                .hasFieldOrPropertyWithValue("upStation", 영통역)
+                .hasFieldOrPropertyWithValue("downStation", 경희역)
+                .hasFieldOrPropertyWithValue("distance", 3L);
+
+        assertThat(template.findById(s2.getId()))
+                .hasFieldOrPropertyWithValue("upStation", 경희역)
+                .hasFieldOrPropertyWithValue("downStation", 동탄역)
+                .hasFieldOrPropertyWithValue("distance", 3L);
+
+        assertThat(template.findByLineId(line.getId()))
+                .hasSize(3);
+
+    }
+
+
 
 }
