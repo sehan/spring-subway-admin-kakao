@@ -88,18 +88,13 @@ public class Line implements SectionEventSupport {
     }
 
     @Override
-    public void setSectionEventListener(SectionEventListener listener) {
-        sections.setSectionEventListener(listener);
+    public void onChangedSection(SectionEventListener listener) {
+        sections.onChangedSection(listener);
     }
 
     @Override
-    public void clearSectionEventListener() {
-        sections.clearSectionEventListener();
-    }
-
-    @Override
-    public void notifySectionEvent(Section section, SectionEvent.Type type) {
-        sections.notifySectionEvent(section, type);
+    public void notifySectionEvents(List<SectionEvent> events) {
+        sections.notifySectionEvents(events);
     }
 
     public static class Builder {

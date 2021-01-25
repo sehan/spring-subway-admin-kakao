@@ -1,11 +1,11 @@
 package subway.core;
 
+import java.util.List;
+
 public interface SectionEventSupport {
 
-    void setSectionEventListener( SectionEventListener listener );
+    void onChangedSection(SectionEventListener listener );
 
-    void clearSectionEventListener();
-
-    void notifySectionEvent(Section section, SectionEvent.Type type);
+    void notifySectionEvents(List<SectionEvent> events);
 
 }

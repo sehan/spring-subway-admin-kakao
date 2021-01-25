@@ -127,11 +127,13 @@ public class Sections implements SectionEventSupport{
         Section prevSection = getUpSectionOf(station);
         Section nextSection = getDownSectionOf(station);
 
+        List<SectionEvent> events = new ArrayList<>();
         if( prevSection == null ){
             // 삭제역이 상행종점
             sections.remove(nextSection);
             stations.remove(station);
-            notifySectionEvent(nextSection, SectionEvent.Type.DELETE);
+            events.add(SectionEvent.of(nextSection, SectionEvent.Type.DELETE));
+            notifySectionEvents(events);
             return;
         }
 
@@ -139,31 +141,28 @@ public class Sections implements SectionEventSupport{
             // 삭제역이 하행종점
             sections.remove(prevSection);
             stations.remove(station);
-            notifySectionEvent(prevSection, SectionEvent.Type.DELETE);
+            events.add(SectionEvent.of(prevSection, SectionEvent.Type.DELETE));
+            notifySectionEvents(events);
             return;
         }
 
         prevSection.merge(nextSection);
         sections.remove(nextSection);
         stations.remove(station);
-        notifySectionEvent(prevSection, SectionEvent.Type.UPDATE);
-        notifySectionEvent(nextSection, SectionEvent.Type.DELETE);
+        events.add(SectionEvent.of(prevSection, SectionEvent.Type.UPDATE));
+        events.add(SectionEvent.of(nextSection, SectionEvent.Type.DELETE));
+        notifySectionEvents(events);
     }
 
     @Override
-    public void setSectionEventListener(SectionEventListener listener) {
+    public void onChangedSection(SectionEventListener listener) {
         sectionEventListener = listener;
     }
 
     @Override
-    public void clearSectionEventListener() {
-        sectionEventListener = null;
-    }
-
-    @Override
-    public void notifySectionEvent(Section section, SectionEvent.Type type) {
+    public void notifySectionEvents(List<SectionEvent> events) {
         if( Objects.nonNull(sectionEventListener)){
-            sectionEventListener.handleEvent(SectionEvent.of(section, type));
+            sectionEventListener.handleEvent(events);
         }
     }
 }

@@ -1,7 +1,9 @@
 package subway.core;
 
+import java.util.List;
+
 public interface SectionEventListener {
 
-    void handleEvent(SectionEvent event);
+    void handleEvent(List<SectionEvent> event);
 
 }

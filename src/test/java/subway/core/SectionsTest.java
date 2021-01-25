@@ -4,6 +4,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 import static org.assertj.core.api.Assertions.*;
 
 class SectionsTest {
@@ -196,6 +198,31 @@ class SectionsTest {
 
     }
 
+    @DisplayName("구간 삭제 ( 삭제역이 상행 종점 인 경우 ) 시 Section Event 가 발생한다")
+    @Test
+    void eventWhenRemoveSectionUpLast() {
+        // Given
+        AtomicInteger countOfDeleteEvent = new AtomicInteger();
+        AtomicInteger countOfUpdateEvent = new AtomicInteger();
+        Sections sections = new Sections(Section.of(수원역, 영통역, 10));
+        sections.addSection(영통역, 서천역, 5);
+        sections.onChangedSection(events -> {
+            countOfDeleteEvent.addAndGet((int) events.stream()
+                    .filter(event -> event.getType().equals(SectionEvent.Type.DELETE))
+                    .count());
+            countOfUpdateEvent.addAndGet((int) events.stream()
+                    .filter(event -> event.getType().equals(SectionEvent.Type.UPDATE))
+                    .count());
+        });
+
+        // When
+        sections.removeSection(수원역);
+
+        // Then
+        assertThat(countOfDeleteEvent.get()).isEqualTo(1);
+        assertThat(countOfUpdateEvent.get()).isEqualTo(0);
+    }
+
     @DisplayName("구간 삭제 ( 삭제역이 하행 종점 인 경우 )")
     @Test
     void removeSectionDownLast() {
@@ -211,13 +238,36 @@ class SectionsTest {
         assertThat(sections.getUpSectionOf(영통역))
                 .isEqualTo(Section.of(수원역, 영통역, 10));
         assertThat(sections.getDownSectionOf(영통역)).isNull();
+    }
 
+    @DisplayName("구간 삭제 ( 삭제역이 하행 종점 인 경우 ) 시 Section Event 가 발생한다")
+    @Test
+    void eventWhenRemoveSectionDownLast() {
+        // Given
+        AtomicInteger countOfDeleteEvent = new AtomicInteger();
+        AtomicInteger countOfUpdateEvent = new AtomicInteger();
+        Sections sections = new Sections(Section.of(수원역, 영통역, 10));
+        sections.addSection(영통역, 서천역, 5);
+        sections.onChangedSection(events -> {
+            countOfDeleteEvent.addAndGet((int) events.stream()
+                    .filter(event -> event.getType().equals(SectionEvent.Type.DELETE))
+                    .count());
+            countOfUpdateEvent.addAndGet((int) events.stream()
+                    .filter(event -> event.getType().equals(SectionEvent.Type.UPDATE))
+                    .count());
+        });
 
+        // When
+        sections.removeSection(서천역);
+
+        // Then
+        assertThat(countOfDeleteEvent.get()).isEqualTo(1);
+        assertThat(countOfUpdateEvent.get()).isEqualTo(0);
     }
 
     @DisplayName("구간 삭제 ( 중간역 )")
     @Test
-    void test101() {
+    void removeMiddleSection() {
         // Given
         Sections sections = new Sections(Section.of(수원역, 영통역, 10));
         sections.addSection(영통역, 서천역, 5);
@@ -233,5 +283,28 @@ class SectionsTest {
 
     }
 
+    @DisplayName("구간 삭제 ( 중간역 ) 시 Section Event 가 발생한다")
+    @Test
+    void eventWhenRemoveMiddleSection() {
+        // Given
+        AtomicInteger countOfDeleteEvent = new AtomicInteger();
+        AtomicInteger countOfUpdateEvent = new AtomicInteger();
+        Sections sections = new Sections(Section.of(수원역, 영통역, 10));
+        sections.addSection(영통역, 서천역, 5);
+        sections.onChangedSection(events -> {
+            countOfDeleteEvent.addAndGet((int) events.stream()
+                    .filter(event -> event.getType().equals(SectionEvent.Type.DELETE))
+                    .count());
+            countOfUpdateEvent.addAndGet((int) events.stream()
+                    .filter(event -> event.getType().equals(SectionEvent.Type.UPDATE))
+                    .count());
+        });
 
+        // When
+        sections.removeSection(영통역);
+
+        // Then
+        assertThat(countOfDeleteEvent.get()).isEqualTo(1);
+        assertThat(countOfUpdateEvent.get()).isEqualTo(1);
+    }
 }
