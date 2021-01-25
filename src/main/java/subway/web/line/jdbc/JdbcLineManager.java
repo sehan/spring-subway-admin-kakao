@@ -66,6 +66,8 @@ public class JdbcLineManager implements LineManager {
     @Transactional
     @Override
     public Line removeSection(Long lineId, Station station) {
+        Line line = lineTemplate.findById(lineId);
+        line.removeSection(station);
         return null;
     }
 }

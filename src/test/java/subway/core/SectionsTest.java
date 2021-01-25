@@ -29,11 +29,14 @@ class SectionsTest {
     @DisplayName("상행 종점 등록")
     @Test
     void addUpLast(){
-        Station 망포역 = Station.of("망포역");
+        // Given
         Sections sections = new Sections(Section.of(영통역, 서천역, 10));
 
+        // When
+        Station 망포역 = Station.of("망포역");
         sections.addSection(망포역, 영통역, 5);
 
+        // Then
         assertThat(sections.hasStation(망포역));
         assertThat(sections.getDownSectionOf(영통역))
                 .isEqualTo(Section.of(영통역, 서천역, 10));
@@ -44,11 +47,14 @@ class SectionsTest {
     @DisplayName("하행 종점 등록")
     @Test
     void addDownLast(){
-        Station 동탄역 = Station.of("동탄역");
+        // Given
         Sections sections = new Sections(Section.of(영통역, 서천역, 10));
 
+        // When
+        Station 동탄역 = Station.of("동탄역");
         sections.addSection(서천역, 동탄역, 5);
 
+        // Then
         assertThat(sections.hasStation(동탄역));
         assertThat(sections.getDownSectionOf(서천역))
                 .isEqualTo(Section.of(서천역, 동탄역, 5));
@@ -157,4 +163,75 @@ class SectionsTest {
                 .isInstanceOf(IllegalArgumentException.class);
 
     }
+
+    @DisplayName("노선에 존재하지 않는 역을 삭제하면 exception 을 던진다")
+    @Test
+    void notExistStation(){
+        // Given
+        Sections sections = new Sections(Section.of(수원역, 영통역, 10));
+        sections.addSection(영통역, 서천역, 5);
+
+        // When
+        // Then
+        assertThatThrownBy( () -> sections.removeSection(Station.of("판교역")) )
+                .isInstanceOf(IllegalArgumentException.class);
+
+    }
+
+    @DisplayName("구간 삭제 ( 삭제역이 상행 종점 인 경우 )")
+    @Test
+    void removeSectionUpLast(){
+        // Given
+        Sections sections = new Sections(Section.of(수원역, 영통역, 10));
+        sections.addSection(영통역, 서천역, 5);
+
+        // When
+        sections.removeSection(수원역);
+
+        // Then
+        assertThat(sections.hasStation(수원역)).isFalse();
+        assertThat(sections.getUpSectionOf(영통역)).isNull();
+        assertThat(sections.getDownSectionOf(영통역))
+                .isEqualTo(Section.of(영통역, 서천역, 5));
+
+    }
+
+    @DisplayName("구간 삭제 ( 삭제역이 하행 종점 인 경우 )")
+    @Test
+    void removeSectionDownLast() {
+        // Given
+        Sections sections = new Sections(Section.of(수원역, 영통역, 10));
+        sections.addSection(영통역, 서천역, 5);
+
+        // When
+        sections.removeSection(서천역);
+
+        // Then
+        assertThat(sections.hasStation(서천역)).isFalse();
+        assertThat(sections.getUpSectionOf(영통역))
+                .isEqualTo(Section.of(수원역, 영통역, 10));
+        assertThat(sections.getDownSectionOf(영통역)).isNull();
+
+
+    }
+
+    @DisplayName("구간 삭제 ( 중간역 )")
+    @Test
+    void test101() {
+        // Given
+        Sections sections = new Sections(Section.of(수원역, 영통역, 10));
+        sections.addSection(영통역, 서천역, 5);
+
+        // When
+        sections.removeSection(영통역);
+
+        // Then
+        assertThat(sections.hasStation(영통역)).isFalse();
+        assertThat(sections.getUpSectionOf(수원역)).isNull();
+        assertThat(sections.getDownSectionOf(수원역))
+                .isEqualTo(Section.of(수원역, 서천역, 15));
+
+    }
+
+
 }

@@ -2,7 +2,7 @@ package subway.core;
 
 import java.util.List;
 
-public class Line {
+public class Line implements SectionEventSupport {
 
     private Long id;
     private String name;
@@ -79,8 +79,27 @@ public class Line {
         addSection(Section.of(upStation, downStation, distance));
     }
 
+    public void removeSection(Station station){
+        sections.removeSection(station);
+    }
+
     public List<Section> getSections() {
         return sections.toList();
+    }
+
+    @Override
+    public void setSectionEventListener(SectionEventListener listener) {
+        sections.setSectionEventListener(listener);
+    }
+
+    @Override
+    public void clearSectionEventListener() {
+        sections.clearSectionEventListener();
+    }
+
+    @Override
+    public void notifySectionEvent(Section section, SectionEvent.Type type) {
+        sections.notifySectionEvent(section, type);
     }
 
     public static class Builder {

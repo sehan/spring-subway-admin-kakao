@@ -6,10 +6,12 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class Sections {
+public class Sections implements SectionEventSupport{
 
     private Set<Station> stations = new HashSet<>();
     private List<Section> sections = new ArrayList<>();
+
+    private SectionEventListener sectionEventListener;
 
     private Sections(){}
 
@@ -87,25 +89,13 @@ public class Sections {
 
     }
 
-    private List<Station> findIntersectionStations(Station up, Station down) {
-        Set clone = new HashSet(stations);
-        clone.retainAll(Arrays.asList(up,down));
-        return new ArrayList<>(clone);
+    private List<Station> findIntersectionStations(Station... targetStations) {
+        Set sourceGroup = new HashSet(stations);
+        Set targetGroup = new HashSet(Arrays.asList(targetStations));
+        sourceGroup.retainAll(targetGroup);
+        return new ArrayList<>(sourceGroup);
     }
 
-    public Section findByDownStation(Station down) {
-        return sections.stream()
-                .filter(section -> section.getDownStation().equals(down))
-                .findFirst()
-                .orElse(null);
-    }
-
-    public Section findByUpStation(Station up) {
-        return sections.stream()
-                .filter(section -> section.getUpStation().equals(up))
-                .findFirst()
-                .orElse(null);
-    }
 
     public Section getDownSectionOf(Station station) {
         return sections.stream()
@@ -127,5 +117,53 @@ public class Sections {
 
     public List<Section> toList() {
         return Collections.unmodifiableList(sections);
+    }
+
+    public void removeSection(Station station) {
+        if( !hasStation(station) ){
+            throw new IllegalArgumentException("노선에 존재하지 않는 역입니다");
+        }
+
+        Section prevSection = getUpSectionOf(station);
+        Section nextSection = getDownSectionOf(station);
+
+        if( prevSection == null ){
+            // 삭제역이 상행종점
+            sections.remove(nextSection);
+            stations.remove(station);
+            notifySectionEvent(nextSection, SectionEvent.Type.DELETE);
+            return;
+        }
+
+        if( nextSection == null ){
+            // 삭제역이 하행종점
+            sections.remove(prevSection);
+            stations.remove(station);
+            notifySectionEvent(prevSection, SectionEvent.Type.DELETE);
+            return;
+        }
+
+        prevSection.merge(nextSection);
+        sections.remove(nextSection);
+        stations.remove(station);
+        notifySectionEvent(prevSection, SectionEvent.Type.UPDATE);
+        notifySectionEvent(nextSection, SectionEvent.Type.DELETE);
+    }
+
+    @Override
+    public void setSectionEventListener(SectionEventListener listener) {
+        sectionEventListener = listener;
+    }
+
+    @Override
+    public void clearSectionEventListener() {
+        sectionEventListener = null;
+    }
+
+    @Override
+    public void notifySectionEvent(Section section, SectionEvent.Type type) {
+        if( Objects.nonNull(sectionEventListener)){
+            sectionEventListener.handleEvent(SectionEvent.of(section, type));
+        }
     }
 }

@@ -4,6 +4,7 @@ import subway.core.Line;
 import subway.web.station.StationResponse;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class LineResponse {
     private Long id;
@@ -25,7 +26,11 @@ public class LineResponse {
     }
 
     public static LineResponse from(Line line) {
-        return new LineResponse(line.getName(), line.getColor());
+        return new LineResponse(line.getId(), line.getName(), line.getColor(),
+                line.getStations()
+                        .stream()
+                        .map(StationResponse::of)
+                        .collect(Collectors.toList()));
     }
 
     public Long getId() {

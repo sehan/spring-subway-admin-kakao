@@ -95,4 +95,10 @@ public class Section {
     public boolean hasId() {
         return Objects.nonNull(id);
     }
+
+    public Section merge(Section target) {
+        downStation = target.getDownStation();
+        distance += target.getDistance();
+        return this;
+    }
 }
