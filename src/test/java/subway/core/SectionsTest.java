@@ -3,6 +3,8 @@ package subway.core;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -88,8 +90,9 @@ class SectionsTest {
     }
 
     @DisplayName("구간 추가 ( 교차역이 하행인 경우 ) 시 기존 구간보다 길이가 길면 exception 을 던진다")
-    @Test
-    void addSectionDownWithException(){
+    @ParameterizedTest
+    @ValueSource(ints = {10, 11})
+    void addSectionDownWithException(int distance){
         // Given
         Sections sections = new Sections(Section.of(수원역, 영통역, 10));
         sections.addSection(영통역, 서천역, 5);
@@ -97,7 +100,7 @@ class SectionsTest {
         // When
         // Then
         Station 망포역 = Station.of("망포역");
-        assertThatThrownBy(() -> sections.addSection(망포역, 영통역, 11))
+        assertThatThrownBy(() -> sections.addSection(망포역, 영통역, distance))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -124,21 +127,22 @@ class SectionsTest {
 
     }
 
-    @DisplayName("구간 추가 ( 교차역이 상행인 경우 ) 시 기존 구간보다 길이가 길면 exception 을 던진다")
-    @Test
-    void addSectionUpWithException(){
+    @DisplayName("구간 추가 ( 교차역이 상행인 경우 ) 시 기존 구간보다 길이가 같거나 exception 을 던진다")
+    @ParameterizedTest
+    @ValueSource(ints = {10, 11})
+    void addSectionUpWithException(int distance){
         // Given
         Sections sections = new Sections(Section.of(수원역, 영통역, 10));
         sections.addSection(영통역, 서천역, 5);
 
         // When
         // Then
-        Station 망포역 = Station.of("망포역");
-        assertThatThrownBy(() -> sections.addSection(망포역, 영통역, 11))
+        Station 경희역 = Station.of("경희역");
+        assertThatThrownBy(() -> sections.addSection(영통역, 경희역, distance))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
-    @DisplayName("교차역이 없으면 구간추가시 exception 을 던진다")
+    @DisplayName("구간 추가 ( 교차역이 없으면 구간추가시 exception 을 던진다 )")
     @Test
     void noIntersection(){
         // Given
@@ -154,7 +158,7 @@ class SectionsTest {
 
     }
 
-    @DisplayName("이미 있는 구간을 추가하면 exception 을 던진다")
+    @DisplayName("구간 추가 (이미 있는 구간을 추가하면 exception 을 던진다)")
     @Test
     void existSection(){
         // Given
@@ -307,5 +311,19 @@ class SectionsTest {
         // Then
         assertThat(countOfDeleteEvent.get()).isEqualTo(1);
         assertThat(countOfUpdateEvent.get()).isEqualTo(1);
+    }
+
+    @DisplayName("구간 삭제 ( 노선이 하나이면 구간을 삭제 할 수 없다)")
+    @Test
+    void removeSectionWhenOnlySection(){
+        // Given
+        Sections sections = new Sections(Section.of(수원역, 영통역, 10));
+
+        // When
+        // Then
+        assertThatThrownBy( () -> sections.removeSection(수원역) )
+                .isInstanceOf(IllegalStateException.class);
+
+
     }
 }

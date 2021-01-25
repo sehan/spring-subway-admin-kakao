@@ -120,6 +120,9 @@ public class Sections implements SectionEventSupport{
     }
 
     public void removeSection(Station station) {
+        if( sections.size() == 1 ){
+            throw new IllegalStateException("노선이 하나인 경우 삭제 할 수 없습니다");
+        }
         if( !hasStation(station) ){
             throw new IllegalArgumentException("노선에 존재하지 않는 역입니다");
         }
