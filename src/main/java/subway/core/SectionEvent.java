@@ -10,6 +10,10 @@ public interface SectionEvent {
 
     Type getType();
 
+    boolean isDelete();
+
+    boolean isUpdate();
+
     static SectionEvent of(Section section, Type type) {
         return new BaseEvent(section, type);
     }
@@ -32,6 +36,16 @@ public interface SectionEvent {
         @Override
         public Type getType() {
             return type;
+        }
+
+        @Override
+        public boolean isDelete() {
+            return this.equals(Type.DELETE);
+        }
+
+        @Override
+        public boolean isUpdate() {
+            return this.equals(Type.UPDATE);
         }
     }
 

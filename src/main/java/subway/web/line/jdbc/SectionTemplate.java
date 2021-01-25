@@ -34,18 +34,13 @@ public class SectionTemplate {
         this.template = template;
     }
 
-    @Transactional
-    public Section save(Line line, Section newSection) {
-        SectionEntity sectionEntity = SectionEntity.of(line.getId(), newSection);
+    public Section save(long lineId, Section section) {
+        long sectionId = save(SectionEntity.of(lineId, section));
+        return findById(sectionId);
+    }
 
-        SimpleJdbcInsert insert = new SimpleJdbcInsert(template)
-                .usingGeneratedKeyColumns("id")
-                .withTableName("SECTION")
-                .usingColumns("line_id", "up_station_id", "down_station_id", "distance");
-
-        BeanPropertySqlParameterSource parameterSource = new BeanPropertySqlParameterSource(sectionEntity);
-        Number id = insert.executeAndReturnKey(parameterSource);
-        return findById(id.longValue());
+    public Section save(Line line, Section section) {
+        return save(line.getId(), section);
     }
 
     private long save(SectionEntity entity) {
@@ -110,5 +105,9 @@ public class SectionTemplate {
         return entities.stream()
                 .map(SectionEntity::toModel)
                 .collect(Collectors.toList());
+    }
+
+    public void deleteById(long sectionId) {
+        template.update("delete from SECTION where id = ?", sectionId);
     }
 }

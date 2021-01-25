@@ -2,10 +2,7 @@ package subway.web.line.jdbc;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import subway.core.Line;
-import subway.core.LineManager;
-import subway.core.Section;
-import subway.core.Station;
+import subway.core.*;
 
 import java.util.List;
 
@@ -23,9 +20,16 @@ public class JdbcLineManager implements LineManager {
     @Transactional
     @Override
     public Line create(Line newLine, Section newSection) {
+        shouldNotExistLineName(newLine.getName());
         newLine = lineTemplate.save(newLine);
-        sectionTemplate.save(newLine, newSection);
+        sectionTemplate.save(newLine.getId(), newSection);
         return newLine;
+    }
+
+    private void shouldNotExistLineName(String lineName) {
+        if( lineTemplate.findByName(lineName).size() > 0 ){
+            throw new AlreadyExistLineNameException(lineName);
+        }
     }
 
     @Override
@@ -67,7 +71,19 @@ public class JdbcLineManager implements LineManager {
     @Override
     public Line removeSection(Long lineId, Station station) {
         Line line = lineTemplate.findById(lineId);
+        line.onChangedSection(new SectionEventListener() {
+            @Transactional
+            @Override
+            public void handleEvent(List<SectionEvent> events) {
+                events.stream()
+                        .filter(SectionEvent::isDelete)
+                        .forEach(event -> sectionTemplate.deleteById(event.getSection().getId()));
+                events.stream()
+                        .filter(SectionEvent::isUpdate)
+                        .forEach(event -> sectionTemplate.save(lineId, event.getSection()));
+            }
+        });
         line.removeSection(station);
-        return null;
+        return lineTemplate.findById(line.getId());
     }
 }

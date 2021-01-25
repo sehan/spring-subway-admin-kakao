@@ -71,4 +71,13 @@ public class LineTemplate {
     public void deleteById(Long lineId) {
         template.update("delete from LINE where id = ?", lineId);
     }
+
+    public List<Line> findByName(String name) {
+        List<LineEntity> entities = template.query("select * from LINE where name = ?",
+                RowMappers.lineEntity,
+                name);
+        return entities.stream()
+                .map(LineEntity::toModel)
+                .collect(Collectors.toList());
+    }
 }
