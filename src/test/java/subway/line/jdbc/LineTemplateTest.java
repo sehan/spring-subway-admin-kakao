@@ -8,9 +8,9 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
 import subway.core.Line;
 import subway.core.Section;
+import subway.core.Station;
 import subway.web.line.jdbc.LineTemplate;
 import subway.web.line.jdbc.SectionTemplate;
-import subway.core.Station;
 import subway.web.station.jdbc.StationTemplate;
 
 import java.util.List;

@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
+import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -324,6 +325,26 @@ class SectionsTest {
         assertThatThrownBy( () -> sections.removeSection(수원역) )
                 .isInstanceOf(IllegalStateException.class);
 
+
+    }
+
+    @DisplayName("상행종점에서 하행종점까지 순서대로 역목록을 조회할 수 있다")
+    @Test
+    void getOrderedStations(){
+        // Given
+        Sections sections = new Sections(Section.of(수원역, 영통역, 10));
+        sections.addSection(영통역, 서천역, 5);
+
+        // When
+        List<Station> stations = sections.getStations();
+
+        // Then
+        assertThat(stations)
+                .containsExactly(
+                        Station.of("수원역"),
+                        Station.of("영통역"),
+                        Station.of("서천역")
+                        );
 
     }
 }

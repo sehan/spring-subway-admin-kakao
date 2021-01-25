@@ -17,7 +17,7 @@ public class JdbcStationRegistry implements StationRegistry {
 
     @Override
     public Station findOne(Long stationId) {
-        return null;
+        return template.findById(stationId);
     }
 
     @Override

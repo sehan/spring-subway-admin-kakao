@@ -1,5 +1,6 @@
 package subway.core;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class Line implements SectionEventSupport {
@@ -68,7 +69,9 @@ public class Line implements SectionEventSupport {
     }
 
     public List<Station> getStations(){
-        return sections.getStations();
+        if( sections != null )
+            return sections.getStations();
+        return Arrays.asList();
     }
 
     public void addSection(Section section){

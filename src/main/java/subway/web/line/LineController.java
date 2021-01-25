@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.*;
 import subway.core.Line;
 import subway.core.LineManager;
 import subway.core.Station;
+import subway.core.StationRegistry;
 
 import java.util.List;
 
@@ -13,9 +14,11 @@ import java.util.List;
 public class LineController {
 
     private final LineManager lineManager;
+    private final StationRegistry stationRegistry;
 
-    public LineController(LineManager lineManager) {
+    public LineController(LineManager lineManager, StationRegistry stationRegistry) {
         this.lineManager = lineManager;
+        this.stationRegistry = stationRegistry;
     }
 
     @PostMapping
@@ -51,8 +54,8 @@ public class LineController {
     @PostMapping(value = "/{id}/sections")
     public ResponseEntity<LineResponse> createSection(@PathVariable Long id, @RequestBody SectionRequest sectionRequest){
         lineManager.addSection(id,
-                Station.ref(sectionRequest.getUpStationId()),
-                Station.ref(sectionRequest.getDownStationId()),
+                stationRegistry.findOne(sectionRequest.getUpStationId()),
+                stationRegistry.findOne(sectionRequest.getDownStationId()),
                 sectionRequest.getDistance());
         return ResponseEntity.ok().build();
     }

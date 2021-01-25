@@ -3,12 +3,10 @@ package subway.core;
 import org.springframework.util.Assert;
 
 import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class Sections implements SectionEventSupport{
 
-    private Set<Station> stations = new HashSet<>();
+    private Stations stations;
     private List<Section> sections = new ArrayList<>();
 
     private SectionEventListener sectionEventListener;
@@ -18,17 +16,19 @@ public class Sections implements SectionEventSupport{
     public Sections(Section section) {
         Assert.notNull(section, "최소 1개의 섹션이 필요합니다");
         this.sections.add(section);
-        this.stations.add(section.getUpStation());
-        this.stations.add(section.getDownStation());
+        this.stations = new Stations(Arrays.asList(section));
     }
 
     private void setSections(List<Section> sections){
         this.sections = sections;
-        this.stations = sections.stream()
-                .flatMap(section -> Stream.of(section.getUpStation(), section.getDownStation()))
-                .collect(Collectors.toSet());
+        this.stations = new Stations(sections);
     }
 
+    /**
+     * sectionData 는 section 이 생성된 순서대로 정렬된 Data
+     * @param sectionData
+     * @return
+     */
     public static Sections loadFrom(List<Section> sectionData){
         Sections sections = new Sections();
         sections.setSections(sectionData);
@@ -37,6 +37,14 @@ public class Sections implements SectionEventSupport{
 
     public boolean hasStation(Station station) {
         return stations.contains(station);
+    }
+
+    public Station getNextStation(Station station){
+        Section down = getDownSectionOf(station);
+        if( Objects.nonNull(down) ){
+            return down.getDownStation();
+        }
+        return null;
     }
 
     public void addSection(Station upStation, Station downStation, long distance){
@@ -64,33 +72,33 @@ public class Sections implements SectionEventSupport{
         if( prevSection == null ){
             // 연결역이 상행종점
             sections.add(section);
-            stations.add(section.getUpStation());
+            stations.add(upStation, downStation);
             return;
         }
 
         if( nextSection == null ){
             // 연결역이 하행종점
             sections.add(section);
-            stations.add(downStation);
+            stations.add(upStation, downStation);
             return;
         }
 
         if( intersection.equals(downStation) ){
             prevSection.changeDownStation(upStation, distance);
             sections.add(section);
-            stations.add(upStation);
+            stations.add(upStation, downStation);
         }
 
         if( intersection.equals(upStation)){
             nextSection.changeUpStation(downStation, distance);
             sections.add(section);
-            stations.add(downStation);
+            stations.add(upStation, downStation);
         }
 
     }
 
     private List<Station> findIntersectionStations(Station... targetStations) {
-        Set sourceGroup = new HashSet(stations);
+        Set sourceGroup = new HashSet(stations.toList());
         Set targetGroup = new HashSet(Arrays.asList(targetStations));
         sourceGroup.retainAll(targetGroup);
         return new ArrayList<>(sourceGroup);
@@ -112,7 +120,7 @@ public class Sections implements SectionEventSupport{
     }
 
     public List<Station> getStations() {
-        return Collections.unmodifiableList(new ArrayList(stations));
+        return Collections.unmodifiableList(stations.toList());
     }
 
     public List<Section> toList() {

@@ -23,7 +23,7 @@ public class JdbcLineManager implements LineManager {
         shouldNotExistLineName(newLine.getName());
         newLine = lineTemplate.save(newLine);
         sectionTemplate.save(newLine.getId(), newSection);
-        return newLine;
+        return findOne(newLine.getId());
     }
 
     private void shouldNotExistLineName(String lineName) {

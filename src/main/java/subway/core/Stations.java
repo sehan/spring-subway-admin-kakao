@@ -1,24 +1,54 @@
 package subway.core;
 
-import java.util.List;
+import java.util.*;
 
 public class Stations {
 
-    private List<Station> stations;
+    private LinkedList<Station> stations = new LinkedList<>();
 
-    public Stations(List<Station> stations) {
-        this.stations = stations;
+    Stations() { }
+
+    public Stations(List<Section> sections) {
+        for (Section section : sections) {
+            add(section.getUpStation(), section.getDownStation());
+        }
     }
 
     public boolean contains(Station station) {
         return stations.contains(station);
     }
 
-    public Station getFirstStation() {
-        return null;
+    public void add(Station upStation, Station downStation) {
+        if (stations.size() == 0) {
+            stations.add(upStation);
+            stations.add(downStation);
+            return;
+        }
+
+        if (contains(upStation)) {
+            try{
+                stations.add(stations.indexOf(upStation) + 1, downStation);
+            } catch (IndexOutOfBoundsException e){
+                stations.add(downStation);
+            }
+            return;
+        }
+
+        if (contains(downStation)) {
+            try {
+                stations.add(stations.indexOf(downStation), upStation);
+            } catch (IndexOutOfBoundsException e){
+                stations.addFirst(upStation);
+            }
+            return;
+        }
     }
 
-    public Station getLastStation() {
-        return null;
+    public List<Station> toList() {
+        return Collections.unmodifiableList(stations);
+    }
+
+    public void remove(Station station) {
+        stations.remove(station);
     }
 }

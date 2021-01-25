@@ -6,7 +6,6 @@ import subway.core.StationRegistry;
 
 import java.util.List;
 
-@Service
 public class DefaultStationRegistry implements StationRegistry {
 
     private StationDao stationDao;
