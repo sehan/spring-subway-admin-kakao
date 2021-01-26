@@ -10,17 +10,11 @@ public class Line implements SectionEventSupport {
     private String name;
     private String color;
 
-    @Deprecated
-    private Stations stations;
     private Sections sections;
 
     public Line(String name, String color) {
         this.name = name;
         this.color = color;
-    }
-
-    private Line(Long id, String name, String color, Section section) {
-        this(id, name, color, new Sections(section));
     }
 
     private Line(Long id, String name, String color, Sections sections) {
@@ -37,23 +31,28 @@ public class Line implements SectionEventSupport {
     }
 
     public static Line of(Long id, String name, String color) {
-        return new Line(id, name, color);
+        return Line.builder()
+                .lineId(id)
+                .nameAndColor(name, color)
+                .build();
     }
 
     public static Line of(Long id, String name, String color, Section section) {
-        return new Line(id, name, color, section);
+        return Line.builder()
+                .lineId(id)
+                .nameAndColor(name, color)
+                .sections(Arrays.asList(section))
+                .build();
     }
 
-    private static Line of(Long id, String name, String color, Sections sections) {
-        return new Line(id, name, color, sections);
+    public static Line of(String name, String color) {
+        return Line.builder()
+                .nameAndColor(name, color)
+                .build();
     }
 
     public static Builder builder() {
         return new Builder();
-    }
-
-    public static Line of(String name, String color) {
-        return Line.builder().nameAndColor(name, color).build();
     }
 
     public String getName() {
@@ -66,10 +65,6 @@ public class Line implements SectionEventSupport {
 
     public Long getId() {
         return id;
-    }
-
-    public boolean hasStation(Station station) {
-        return sections.hasStation(station);
     }
 
     public List<Station> getStations() {
@@ -129,9 +124,9 @@ public class Line implements SectionEventSupport {
 
         public Line build() {
             if (Objects.nonNull(sections)) {
-                return Line.of(lineId, name, color, Sections.loadFrom(sections));
+                return new Line(lineId, name, color, Sections.loadFrom(sections));
             }
-            return Line.of(lineId, name, color);
+            return new Line(lineId, name, color);
         }
 
         public Builder lineId(Long lineId) {
