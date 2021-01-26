@@ -1,4 +1,4 @@
-package subway.web.station;
+package subway.repository.jdbc;
 
 import subway.core.Station;
 

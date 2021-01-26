@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import subway.core.NotFoundStationException;
 import subway.core.Station;
 import subway.core.StationRegistry;
 

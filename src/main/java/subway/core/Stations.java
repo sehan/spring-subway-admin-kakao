@@ -1,12 +1,15 @@
 package subway.core;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
 
 public class Stations {
 
     private LinkedList<Station> stations = new LinkedList<>();
 
-    Stations() { }
+    Stations() {
+    }
 
     public Stations(List<Section> sections) {
         for (Section section : sections) {
@@ -26,9 +29,9 @@ public class Stations {
         }
 
         if (contains(upStation)) {
-            try{
+            try {
                 stations.add(stations.indexOf(upStation) + 1, downStation);
-            } catch (IndexOutOfBoundsException e){
+            } catch (IndexOutOfBoundsException e) {
                 stations.add(downStation);
             }
             return;
@@ -37,7 +40,7 @@ public class Stations {
         if (contains(downStation)) {
             try {
                 stations.add(stations.indexOf(downStation), upStation);
-            } catch (IndexOutOfBoundsException e){
+            } catch (IndexOutOfBoundsException e) {
                 stations.addFirst(upStation);
             }
             return;

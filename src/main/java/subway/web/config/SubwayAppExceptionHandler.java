@@ -17,7 +17,7 @@ public class SubwayAppExceptionHandler {
             IllegalSectionException.class,
             IllegalStateException.class,
             RuntimeException.class})
-    public String handle500(RuntimeException e){
+    public String handle500(RuntimeException e) {
         return e.getMessage();
     }
 
@@ -25,10 +25,9 @@ public class SubwayAppExceptionHandler {
     @ExceptionHandler(value = {
             IllegalArgumentException.class,
             AlreadyExistLineNameException.class})
-    public String handlerBadRequest(RuntimeException e){
+    public String handlerBadRequest(RuntimeException e) {
         return e.getMessage();
     }
-
 
 
 }

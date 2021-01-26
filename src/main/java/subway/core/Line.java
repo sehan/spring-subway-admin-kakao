@@ -14,7 +14,7 @@ public class Line implements SectionEventSupport {
     private Stations stations;
     private Sections sections;
 
-    public Line(String name, String color){
+    public Line(String name, String color) {
         this.name = name;
         this.color = color;
     }
@@ -72,13 +72,13 @@ public class Line implements SectionEventSupport {
         return sections.hasStation(station);
     }
 
-    public List<Station> getStations(){
-        if( sections != null )
+    public List<Station> getStations() {
+        if (sections != null)
             return sections.getStations();
         return Arrays.asList();
     }
 
-    public void addSection(Section section){
+    public void addSection(Section section) {
         sections.addSection(section);
     }
 
@@ -86,7 +86,7 @@ public class Line implements SectionEventSupport {
         addSection(Section.of(upStation, downStation, distance));
     }
 
-    public void removeSection(Station station){
+    public void removeSection(Station station) {
         sections.removeSection(station);
     }
 
@@ -128,7 +128,7 @@ public class Line implements SectionEventSupport {
         }
 
         public Line build() {
-            if(Objects.nonNull(sections)) {
+            if (Objects.nonNull(sections)) {
                 return Line.of(lineId, name, color, Sections.loadFrom(sections));
             }
             return Line.of(lineId, name, color);

@@ -6,7 +6,7 @@ public interface LineManager {
 
     /**
      * 라인 생성
-     *
+     * <p>
      * 제약사항
      * 1. 라인이름이 이미 존재하면 AlreadyExistLineNameException 이 발생한다
      *

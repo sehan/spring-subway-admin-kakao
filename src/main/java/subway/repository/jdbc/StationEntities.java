@@ -1,6 +1,4 @@
-package subway.web.line.jdbc;
-
-import subway.web.station.StationEntity;
+package subway.repository.jdbc;
 
 import java.util.List;
 

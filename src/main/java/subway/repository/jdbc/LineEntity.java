@@ -1,9 +1,8 @@
-package subway.web.line.jdbc;
+package subway.repository.jdbc;
 
 
 import subway.core.Line;
 import subway.core.Section;
-import subway.web.station.StationEntity;
 
 import java.util.List;
 import java.util.Objects;
@@ -27,7 +26,7 @@ public class LineEntity {
     }
 
     public static LineEntity of(Line line) {
-        if (Objects.nonNull(line.getId())){
+        if (Objects.nonNull(line.getId())) {
             return persistInstance(line.getId(), line.getName(), line.getColor());
         }
         return transientInstance(line);
@@ -45,7 +44,6 @@ public class LineEntity {
         return id;
     }
 
-
     public String getName() {
         return name;
     }
@@ -54,17 +52,13 @@ public class LineEntity {
         return color;
     }
 
-
-
-
-
     public Line toModel(List<SectionEntity> sectionEntities, List<StationEntity> stationEntities) {
         StationEntities stations = new StationEntities(stationEntities);
         List<Section> sections = sectionEntities.stream()
-                .map( sectionEntity -> sectionEntity.toModel(
-                            stations.get(sectionEntity.getUpStationId()),
-                            stations.get(sectionEntity.getDownStationId())
-                    ))
+                .map(sectionEntity -> sectionEntity.toModel(
+                        stations.get(sectionEntity.getUpStationId()),
+                        stations.get(sectionEntity.getDownStationId())
+                ))
                 .collect(Collectors.toList());
 
         return Line.builder()

@@ -1,4 +1,4 @@
-package subway.web.station.jdbc;
+package subway.repository.jdbc;
 
 import org.springframework.stereotype.Service;
 import subway.core.Station;

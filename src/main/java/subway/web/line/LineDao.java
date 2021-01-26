@@ -1,4 +1,4 @@
-package subway.web.line.simple;
+package subway.web.line;
 
 import org.springframework.stereotype.Repository;
 import org.springframework.util.ReflectionUtils;
@@ -35,6 +35,6 @@ public class LineDao {
         lines.stream()
                 .filter(line -> line.getId() == lineId)
                 .findFirst()
-                .ifPresent( line -> lines.remove(line) );
+                .ifPresent(line -> lines.remove(line));
     }
 }

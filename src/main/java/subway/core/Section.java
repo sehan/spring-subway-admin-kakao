@@ -19,18 +19,18 @@ public class Section {
         this.distance = distance;
     }
 
-    private Section(long id, Station upStation, Station downStation, long distance){
+    private Section(long id, Station upStation, Station downStation, long distance) {
         this.id = id;
         this.upStation = upStation;
         this.downStation = downStation;
         this.distance = distance;
     }
 
-    public static Section of(long upStationId, long downStationId, long distance){
+    public static Section of(long upStationId, long downStationId, long distance) {
         return new Section(upStationId, downStationId, distance);
     }
 
-    public static Section of(Station up, Station down, long distance){
+    public static Section of(Station up, Station down, long distance) {
         return new Section(up, down, distance);
     }
 
@@ -59,13 +59,13 @@ public class Section {
     }
 
     public void changeDownStation(Station newDownStation, long distanceOfNewSection) {
-        if( distance <= distanceOfNewSection ) throw new IllegalArgumentException("종점이 아닌 새로운 구간의 길이가 기존 구간보다 길면 안됩니다");
+        if (distance <= distanceOfNewSection) throw new IllegalArgumentException("종점이 아닌 새로운 구간의 길이가 기존 구간보다 길면 안됩니다");
         downStation = newDownStation;
         distance -= distanceOfNewSection;
     }
 
     public void changeUpStation(Station newUpStation, long distanceOfNewSection) {
-        if( distance <= distanceOfNewSection ) throw new IllegalArgumentException("종점이 아닌 새로운 구간의 길이가 기존 구간보다 길면 안됩니다");
+        if (distance <= distanceOfNewSection) throw new IllegalArgumentException("종점이 아닌 새로운 구간의 길이가 기존 구간보다 길면 안됩니다");
         upStation = newUpStation;
         distance -= distanceOfNewSection;
     }

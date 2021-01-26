@@ -1,8 +1,7 @@
-package subway.web.line.jdbc;
+package subway.repository.jdbc;
 
 import subway.core.Section;
 import subway.core.Station;
-import subway.web.station.StationEntity;
 
 import java.util.Objects;
 
@@ -14,7 +13,8 @@ public class SectionEntity {
     private Long downStationId;
     private Long distance;
 
-    private SectionEntity() { }
+    private SectionEntity() {
+    }
 
     SectionEntity(long id, long lineId, long upStationId, long downStationId, long distance) {
         this.id = id;

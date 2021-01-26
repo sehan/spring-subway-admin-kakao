@@ -14,7 +14,7 @@ public class StationController {
 
     private StationRegistry stationRegistry;
 
-    public StationController(StationRegistry stationRegistry){
+    public StationController(StationRegistry stationRegistry) {
         this.stationRegistry = stationRegistry;
     }
 
@@ -31,12 +31,12 @@ public class StationController {
         return ResponseEntity.ok().body(StationResponses.convertFrom(stations));
     }
 
-    @GetMapping(value ="/stations/{id}")
-    public ResponseEntity<StationResponse> get(@PathVariable Long id){
+    @GetMapping(value = "/stations/{id}")
+    public ResponseEntity<StationResponse> get(@PathVariable Long id) {
         try {
             Station station = stationRegistry.findOne(id);
             return ResponseEntity.ok(StationResponse.of(station));
-        } catch ( IllegalArgumentException e ){
+        } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().build();
         }
     }

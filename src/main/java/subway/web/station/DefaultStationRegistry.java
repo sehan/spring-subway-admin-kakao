@@ -1,6 +1,6 @@
 package subway.web.station;
 
-import org.springframework.stereotype.Service;
+import subway.core.NotFoundStationException;
 import subway.core.Station;
 import subway.core.StationRegistry;
 

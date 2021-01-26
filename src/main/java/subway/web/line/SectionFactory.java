@@ -10,7 +10,7 @@ public class SectionFactory {
                 createRequest.getDistance());
     }
 
-    public static Section create(SectionRequest sectionRequest){
+    public static Section create(SectionRequest sectionRequest) {
         return new Section(
                 sectionRequest.getUpStationId(),
                 sectionRequest.getDownStationId(),

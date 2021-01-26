@@ -9,7 +9,7 @@ public class Station {
     public Station() {
     }
 
-    private Station(Long id){
+    private Station(Long id) {
         this.id = id;
     }
 
@@ -22,11 +22,17 @@ public class Station {
         this.name = name;
     }
 
-    public static Station ref(Long id) { return new Station(id); }
+    public static Station ref(Long id) {
+        return new Station(id);
+    }
+
     public static Station of(String name) {
         return new Station(name);
     }
-    public static Station of(Long id, String name) { return new Station(id, name); }
+
+    public static Station of(Long id, String name) {
+        return new Station(id, name);
+    }
 
     public Long getId() {
         return id;

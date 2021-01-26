@@ -18,7 +18,7 @@ public interface SectionEvent {
         return new BaseEvent(section, type);
     }
 
-    class BaseEvent implements SectionEvent{
+    class BaseEvent implements SectionEvent {
 
         private Section section;
         private Type type;

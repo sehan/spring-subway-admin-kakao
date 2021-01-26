@@ -1,4 +1,4 @@
-package subway.web.line.jdbc;
+package subway.repository.jdbc;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -6,9 +6,7 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 import subway.core.Line;
-import subway.web.station.StationEntity;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -30,7 +28,7 @@ public class LineTemplate {
     }
 
     private long save(LineEntity entity) {
-        if( entity.hasId()){
+        if (entity.hasId()) {
             return update(entity);
         }
         return insert(entity);
@@ -52,7 +50,7 @@ public class LineTemplate {
         return id.longValue();
     }
 
-    public Line findById(long lineId){
+    public Line findById(long lineId) {
         return findById(lineId, true);
     }
 
@@ -61,7 +59,7 @@ public class LineTemplate {
                 RowMappers.lineEntity,
                 lineId);
 
-        if( fetch ) {
+        if (fetch) {
             List<SectionEntity> sections = template.query("select * from SECTION where line_id = ?",
                     RowMappers.sectionEntity,
                     lineId);

@@ -4,7 +4,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import subway.core.Line;
 import subway.core.LineManager;
-import subway.core.Station;
 import subway.core.StationRegistry;
 
 import java.net.URI;

@@ -37,7 +37,7 @@ public class StationDao {
 
     public Optional<Station> findById(Long id) {
         return Optional.ofNullable(stations.stream()
-                .filter(station -> station.getId() == id )
+                .filter(station -> station.getId() == id)
                 .findFirst()
                 .orElse(null));
     }

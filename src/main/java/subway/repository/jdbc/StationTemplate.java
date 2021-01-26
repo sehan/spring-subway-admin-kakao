@@ -1,4 +1,4 @@
-package subway.web.station.jdbc;
+package subway.repository.jdbc;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -39,7 +39,7 @@ public class StationTemplate {
         return findById(id.longValue());
     }
 
-    public List<Station> findAll(){
+    public List<Station> findAll() {
         return template.query("select * from STATION", stationRowMapper);
     }
 

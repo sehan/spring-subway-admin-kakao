@@ -1,7 +1,6 @@
-package subway.web.line.jdbc;
+package subway.repository.jdbc;
 
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import subway.core.*;
 
@@ -28,7 +27,7 @@ public class JdbcLineManager implements LineManager {
     }
 
     private void shouldNotExistLineName(String lineName) {
-        if( lineTemplate.findByName(lineName).size() > 0 ){
+        if (lineTemplate.findByName(lineName).size() > 0) {
             throw new AlreadyExistLineNameException(lineName);
         }
     }
@@ -81,7 +80,7 @@ public class JdbcLineManager implements LineManager {
         return lineTemplate.save(line);
     }
 
-    class DefaultSectionEventListener implements SectionEventListener{
+    class DefaultSectionEventListener implements SectionEventListener {
 
         private final long lineId;
 
@@ -92,11 +91,11 @@ public class JdbcLineManager implements LineManager {
         @Transactional
         @Override
         public void handleEvent(List<SectionEvent> events) {
-            for( SectionEvent event : events ){
-                if( event.isDelete() ){
+            for (SectionEvent event : events) {
+                if (event.isDelete()) {
                     sectionTemplate.deleteById(event.getSection().getId());
                 }
-                if( event.isUpdate() ){
+                if (event.isUpdate()) {
                     sectionTemplate.save(lineId, event.getSection());
                 }
             }

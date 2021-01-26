@@ -1,4 +1,4 @@
-package subway.web.line.jdbc;
+package subway.repository.jdbc;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -10,7 +10,6 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import subway.core.Line;
 import subway.core.Section;
-import subway.web.station.StationEntity;
 
 import java.util.Arrays;
 import java.util.List;

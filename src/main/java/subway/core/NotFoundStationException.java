@@ -1,4 +1,4 @@
-package subway.web.station;
+package subway.core;
 
 import java.text.MessageFormat;
 
