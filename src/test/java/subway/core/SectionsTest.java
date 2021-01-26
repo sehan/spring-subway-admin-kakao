@@ -155,7 +155,7 @@ class SectionsTest {
         Station 판교역 = Station.of("판교역");
         Station 분당역 = Station.of("분당역");
         assertThatThrownBy(() -> sections.addSection(판교역, 분당역, 1))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(IllegalSectionException.class);
 
     }
 
@@ -168,7 +168,7 @@ class SectionsTest {
         // When
         // Then
         assertThatThrownBy(() -> sections.addSection(수원역, 영통역, 1))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(AlreadyExistSectionException.class);
 
     }
 

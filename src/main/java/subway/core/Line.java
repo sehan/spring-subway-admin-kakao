@@ -2,6 +2,7 @@ package subway.core;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 public class Line implements SectionEventSupport {
 
@@ -12,6 +13,11 @@ public class Line implements SectionEventSupport {
     @Deprecated
     private Stations stations;
     private Sections sections;
+
+    public Line(String name, String color){
+        this.name = name;
+        this.color = color;
+    }
 
     private Line(Long id, String name, String color, Section section) {
         this(id, name, color, new Sections(section));
@@ -24,13 +30,7 @@ public class Line implements SectionEventSupport {
         this.sections = sections;
     }
 
-
-    public Line(String name, String color) {
-        this.name = name;
-        this.color = color;
-    }
-
-    private Line(long id, String name, String color) {
+    private Line(Long id, String name, String color) {
         this.id = id;
         this.name = name;
         this.color = color;
@@ -50,6 +50,10 @@ public class Line implements SectionEventSupport {
 
     public static Builder builder() {
         return new Builder();
+    }
+
+    public static Line of(String name, String color) {
+        return Line.builder().nameAndColor(name, color).build();
     }
 
     public String getName() {
@@ -124,7 +128,10 @@ public class Line implements SectionEventSupport {
         }
 
         public Line build() {
-            return Line.of(lineId, name, color, Sections.loadFrom(sections));
+            if(Objects.nonNull(sections)) {
+                return Line.of(lineId, name, color, Sections.loadFrom(sections));
+            }
+            return Line.of(lineId, name, color);
         }
 
         public Builder lineId(Long lineId) {

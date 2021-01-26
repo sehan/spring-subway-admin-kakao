@@ -7,6 +7,7 @@ import subway.core.LineManager;
 import subway.core.Station;
 import subway.core.StationRegistry;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -25,9 +26,11 @@ public class LineController {
     public ResponseEntity<LineResponse> create(@RequestBody LineRequest createRequest) {
         Line line = lineManager.create(
                 LineFactory.create(createRequest),
-                SectionFactory.create(createRequest)
+                stationRegistry.findOne(createRequest.getUpStationId()),
+                stationRegistry.findOne(createRequest.getDownStationId()),
+                createRequest.getDistance()
         );
-        return ResponseEntity.ok(LineResponse.from(line));
+        return ResponseEntity.created(URI.create("/lines/" + line.getId())).body(LineResponse.from(line));
     }
 
     @GetMapping
@@ -44,15 +47,17 @@ public class LineController {
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<LineResponse> get(@PathVariable Long id) {
-        try {
-            return ResponseEntity.ok(LineResponse.from(lineManager.findOne(id)));
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().build();
-        }
+        return ResponseEntity.ok(LineResponse.from(lineManager.findOne(id)));
+    }
+
+    @PutMapping(value = "/{id}")
+    public ResponseEntity<LineResponse> update(@PathVariable Long id, @RequestBody LineRequest lineRequest) {
+        return ResponseEntity.ok(LineResponse.from(lineManager.update(LineFactory.create(id, lineRequest))));
+
     }
 
     @PostMapping(value = "/{id}/sections")
-    public ResponseEntity<LineResponse> createSection(@PathVariable Long id, @RequestBody SectionRequest sectionRequest){
+    public ResponseEntity<LineResponse> createSection(@PathVariable Long id, @RequestBody SectionRequest sectionRequest) {
         lineManager.addSection(id,
                 stationRegistry.findOne(sectionRequest.getUpStationId()),
                 stationRegistry.findOne(sectionRequest.getDownStationId()),
@@ -61,8 +66,8 @@ public class LineController {
     }
 
     @DeleteMapping(value = "/{id}/sections")
-    public ResponseEntity<LineResponse> deleteSection(@PathVariable Long id, long stationId){
-        lineManager.removeSection(id, Station.ref(stationId));
+    public ResponseEntity<LineResponse> deleteSection(@PathVariable Long id, long stationId) {
+        lineManager.removeSection(id, stationRegistry.findOne(stationId));
         return ResponseEntity.ok().build();
     }
 

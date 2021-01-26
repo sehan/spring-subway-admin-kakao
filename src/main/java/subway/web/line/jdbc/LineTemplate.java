@@ -6,6 +6,7 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import subway.core.Line;
 import subway.web.station.StationEntity;
 
@@ -22,8 +23,25 @@ public class LineTemplate {
         this.template = template;
     }
 
-    public Line save(Line newLine) {
-        LineEntity entity = LineEntity.transientInstance(newLine);
+
+    public Line save(Line line) {
+        long lineId = save(LineEntity.of(line));
+        return findById(lineId, false);
+    }
+
+    private long save(LineEntity entity) {
+        if( entity.hasId()){
+            return update(entity);
+        }
+        return insert(entity);
+    }
+
+    private long update(LineEntity entity) {
+        template.update("update LINE set name = ? , color = ? where id = ?", entity.getName(), entity.getColor(), entity.getId());
+        return entity.getId();
+    }
+
+    private long insert(LineEntity entity) {
         SimpleJdbcInsert insert = new SimpleJdbcInsert(template)
                 .usingGeneratedKeyColumns("id")
                 .withTableName("LINE")
@@ -31,7 +49,7 @@ public class LineTemplate {
 
         BeanPropertySqlParameterSource parameterSource = new BeanPropertySqlParameterSource(entity);
         Number id = insert.executeAndReturnKey(parameterSource);
-        return findById(id.longValue(), false);
+        return id.longValue();
     }
 
     public Line findById(long lineId){

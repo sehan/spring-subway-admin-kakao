@@ -28,23 +28,33 @@ class SectionTemplateTest {
     SectionTemplate template;
     StationTemplate stationTemplate;
 
+    Station 영통역;
+    Station 서천역;
+    Station 동탄역;
+    Station 경희역;
+
     @BeforeEach
     void setUp() {
         template = new SectionTemplate(jdbcTemplate);
         stationTemplate = new StationTemplate(jdbcTemplate);
+
+        영통역 = stationTemplate.save(Station.of("영통역"));
+        경희역 = stationTemplate.save(Station.of("서천역"));
+        서천역 = stationTemplate.save(Station.of("동탄역"));
+        동탄역 = stationTemplate.save(Station.of("경희역"));
+
     }
 
 
     @Test
     void 섹션_저장() {
         Line line = Line.of(1L, "인덕원선", "blue");
-        Section section = Section.of(5L, 6L, 10);
+        Section section = Section.of(영통역, 서천역, 10);
         Section persist = template.save(line, section);
 
         assertThat(persist)
-                .hasFieldOrPropertyWithValue("id", 1L)
-                .hasFieldOrPropertyWithValue("upStation", Station.ref(5L))
-                .hasFieldOrPropertyWithValue("downStation", Station.ref(6L))
+                .hasFieldOrPropertyWithValue("upStation", 영통역)
+                .hasFieldOrPropertyWithValue("downStation", 서천역)
                 .hasFieldOrPropertyWithValue("distance", 10L);
     }
 
@@ -53,16 +63,6 @@ class SectionTemplateTest {
     @Test
     void 다수섹션_저장2() {
         // Given
-        Station 영통역 = Station.of("영통역");
-        Station 서천역 = Station.of("서천역");
-        Station 동탄역 = Station.of("동탄역");
-        Station 경희역 = Station.of("경희역");
-        영통역 = stationTemplate.save(영통역);
-        경희역 = stationTemplate.save(경희역);
-        서천역 = stationTemplate.save(서천역);
-        동탄역 = stationTemplate.save(동탄역);
-
-
         Section s1 = Section.of(영통역, 서천역, 5);
         Section s2 = Section.of(서천역, 동탄역, 5);
 

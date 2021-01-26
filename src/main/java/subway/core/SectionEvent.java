@@ -40,12 +40,12 @@ public interface SectionEvent {
 
         @Override
         public boolean isDelete() {
-            return this.equals(Type.DELETE);
+            return type.equals(Type.DELETE);
         }
 
         @Override
         public boolean isUpdate() {
-            return this.equals(Type.UPDATE);
+            return type.equals(Type.UPDATE);
         }
     }
 

@@ -11,10 +11,9 @@ public interface LineManager {
      * 1. 라인이름이 이미 존재하면 AlreadyExistLineNameException 이 발생한다
      *
      * @param newLine
-     * @param newSection
      * @return
      */
-    Line create(Line newLine, Section newSection);
+    Line create(Line newLine, Station up, Station down, long distance);
 
     void delete(Long lineId);
 
@@ -27,6 +26,7 @@ public interface LineManager {
 
     Line addSection(Long lineId, Station upStation, Station downStation, long distance);
 
-    Line removeSection(Long lineId, Station station);
+    void removeSection(Long lineId, Station station);
 
+    Line update(Line line);
 }

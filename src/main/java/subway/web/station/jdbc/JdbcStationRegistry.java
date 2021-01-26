@@ -22,7 +22,7 @@ public class JdbcStationRegistry implements StationRegistry {
 
     @Override
     public void remove(Long stationId) {
-
+        template.deleteById(stationId);
     }
 
     @Override
@@ -32,6 +32,6 @@ public class JdbcStationRegistry implements StationRegistry {
 
     @Override
     public List<Station> getAll() {
-        return null;
+        return template.findAll();
     }
 }

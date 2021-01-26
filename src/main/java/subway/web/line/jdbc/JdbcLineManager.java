@@ -1,6 +1,7 @@
 package subway.web.line.jdbc;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import subway.core.*;
 
@@ -19,10 +20,10 @@ public class JdbcLineManager implements LineManager {
 
     @Transactional
     @Override
-    public Line create(Line newLine, Section newSection) {
+    public Line create(Line newLine, Station up, Station down, long distance) {
         shouldNotExistLineName(newLine.getName());
         newLine = lineTemplate.save(newLine);
-        sectionTemplate.save(newLine.getId(), newSection);
+        sectionTemplate.save(newLine.getId(), Section.of(up, down, distance));
         return findOne(newLine.getId());
     }
 
@@ -69,21 +70,36 @@ public class JdbcLineManager implements LineManager {
 
     @Transactional
     @Override
-    public Line removeSection(Long lineId, Station station) {
+    public void removeSection(Long lineId, Station station) {
         Line line = lineTemplate.findById(lineId);
-        line.onChangedSection(new SectionEventListener() {
-            @Transactional
-            @Override
-            public void handleEvent(List<SectionEvent> events) {
-                events.stream()
-                        .filter(SectionEvent::isDelete)
-                        .forEach(event -> sectionTemplate.deleteById(event.getSection().getId()));
-                events.stream()
-                        .filter(SectionEvent::isUpdate)
-                        .forEach(event -> sectionTemplate.save(lineId, event.getSection()));
-            }
-        });
+        line.onChangedSection(new DefaultSectionEventListener(lineId));
         line.removeSection(station);
-        return lineTemplate.findById(line.getId());
+    }
+
+    @Override
+    public Line update(Line line) {
+        return lineTemplate.save(line);
+    }
+
+    class DefaultSectionEventListener implements SectionEventListener{
+
+        private final long lineId;
+
+        public DefaultSectionEventListener(long lineId) {
+            this.lineId = lineId;
+        }
+
+        @Transactional
+        @Override
+        public void handleEvent(List<SectionEvent> events) {
+            for( SectionEvent event : events ){
+                if( event.isDelete() ){
+                    sectionTemplate.deleteById(event.getSection().getId());
+                }
+                if( event.isUpdate() ){
+                    sectionTemplate.save(lineId, event.getSection());
+                }
+            }
+        }
     }
 }

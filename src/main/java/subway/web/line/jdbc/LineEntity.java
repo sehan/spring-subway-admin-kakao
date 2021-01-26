@@ -6,6 +6,7 @@ import subway.core.Section;
 import subway.web.station.StationEntity;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class LineEntity {
@@ -25,16 +26,11 @@ public class LineEntity {
         this.color = color;
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getColor() {
-        return color;
+    public static LineEntity of(Line line) {
+        if (Objects.nonNull(line.getId())){
+            return persistInstance(line.getId(), line.getName(), line.getColor());
+        }
+        return transientInstance(line);
     }
 
     public static LineEntity transientInstance(Line line) {
@@ -44,6 +40,23 @@ public class LineEntity {
     public static LineEntity persistInstance(long id, String name, String color) {
         return new LineEntity(id, name, color);
     }
+
+    public Long getId() {
+        return id;
+    }
+
+
+    public String getName() {
+        return name;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+
+
+
 
     public Line toModel(List<SectionEntity> sectionEntities, List<StationEntity> stationEntities) {
         StationEntities stations = new StationEntities(stationEntities);
@@ -66,5 +79,9 @@ public class LineEntity {
                 id,
                 name,
                 color);
+    }
+
+    public boolean hasId() {
+        return Objects.nonNull(id);
     }
 }

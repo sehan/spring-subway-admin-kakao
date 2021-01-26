@@ -48,4 +48,8 @@ public class StationTemplate {
                 stationRowMapper,
                 stationId);
     }
+
+    public void deleteById(Long stationId) {
+        template.update("delete from STATION where id = ?", stationId);
+    }
 }

@@ -1,8 +1,6 @@
 package subway.web.line.jdbc;
 
 import org.springframework.jdbc.core.RowMapper;
-import subway.core.Section;
-import subway.core.Station;
 import subway.web.station.StationEntity;
 
 public class RowMappers {

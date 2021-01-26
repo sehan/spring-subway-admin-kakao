@@ -46,16 +46,16 @@ class LineTemplateTest {
         청명역 = stationTemplate.save(new Station("청명역"));
         기흥역 = stationTemplate.save(new Station("기흥역"));
 
-        인덕원선 = lineTemplate.save(new Line("분당선", "yellow"));
+        인덕원선 = lineTemplate.save(Line.of("분당선", "yellow"));
         sectionTemplate.save(인덕원선, new Section(영통역.getId(), 청명역.getId(), 3));
         sectionTemplate.save(인덕원선, new Section(청명역.getId(), 기흥역.getId(), 5));
 
-        일호선 = lineTemplate.save(new Line("일호선", "green"));
+        일호선 = lineTemplate.save(Line.of("일호선", "green"));
     }
 
     @Test
     void test(){
-        Line line = new Line("인덕원선", "blue");
+        Line line = Line.of("인덕원선", "blue");
         Line actual = lineTemplate.save(line);
 
         assertThat(actual)

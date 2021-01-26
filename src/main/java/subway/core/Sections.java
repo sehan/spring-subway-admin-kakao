@@ -58,11 +58,9 @@ public class Sections implements SectionEventSupport{
 
         List<Station> intersections = findIntersectionStations(upStation, downStation);
 
-        if (intersections.size() == 2) {
-            throw new IllegalArgumentException("이미 존재하는 구간입니다");
-        }
+        if (intersections.size() == 2) throw new AlreadyExistSectionException("이미 존재하는 구간입니다");
         if (intersections.size() == 0 ) {
-            throw new IllegalArgumentException("현재 라인에 연결할 수 없는 구간입니다");
+            throw new IllegalSectionException("현재 라인에 연결할 수 없는 구간입니다");
         }
 
         Station intersection = intersections.get(0);
