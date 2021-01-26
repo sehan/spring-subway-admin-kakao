@@ -1,4 +1,4 @@
-package subway.repository.jdbc;
+package subway.repository.jdbc.entity;
 
 import subway.core.Section;
 import subway.core.Station;

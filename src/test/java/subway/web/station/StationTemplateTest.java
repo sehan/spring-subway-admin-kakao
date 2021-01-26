@@ -8,7 +8,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
 import subway.core.Station;
-import subway.repository.jdbc.StationTemplate;
+import subway.repository.jdbc.entity.StationTemplate;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

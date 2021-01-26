@@ -9,9 +9,9 @@ import org.springframework.test.context.jdbc.Sql;
 import subway.core.Line;
 import subway.core.Section;
 import subway.core.Station;
-import subway.repository.jdbc.LineTemplate;
-import subway.repository.jdbc.SectionTemplate;
-import subway.repository.jdbc.StationTemplate;
+import subway.repository.jdbc.entity.LineTemplate;
+import subway.repository.jdbc.entity.SectionTemplate;
+import subway.repository.jdbc.entity.StationTemplate;
 
 import java.util.List;
 

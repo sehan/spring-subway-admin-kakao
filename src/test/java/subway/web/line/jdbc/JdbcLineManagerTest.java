@@ -7,8 +7,8 @@ import org.mockito.MockitoAnnotations;
 import subway.core.Line;
 import subway.line.model.LineManagerTest;
 import subway.repository.jdbc.JdbcLineManager;
-import subway.repository.jdbc.LineTemplate;
-import subway.repository.jdbc.SectionTemplate;
+import subway.repository.jdbc.entity.LineTemplate;
+import subway.repository.jdbc.entity.SectionTemplate;
 
 import java.util.Arrays;
 

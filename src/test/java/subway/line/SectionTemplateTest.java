@@ -11,8 +11,8 @@ import org.springframework.transaction.annotation.Transactional;
 import subway.core.Line;
 import subway.core.Section;
 import subway.core.Station;
-import subway.repository.jdbc.SectionTemplate;
-import subway.repository.jdbc.StationTemplate;
+import subway.repository.jdbc.entity.SectionTemplate;
+import subway.repository.jdbc.entity.StationTemplate;
 
 import java.util.Arrays;
 

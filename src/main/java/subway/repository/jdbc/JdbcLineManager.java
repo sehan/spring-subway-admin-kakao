@@ -3,6 +3,8 @@ package subway.repository.jdbc;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import subway.core.*;
+import subway.repository.jdbc.entity.LineTemplate;
+import subway.repository.jdbc.entity.SectionTemplate;
 
 import java.util.List;
 

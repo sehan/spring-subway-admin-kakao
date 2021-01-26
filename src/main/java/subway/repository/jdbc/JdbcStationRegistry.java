@@ -3,6 +3,7 @@ package subway.repository.jdbc;
 import org.springframework.stereotype.Service;
 import subway.core.Station;
 import subway.core.StationRegistry;
+import subway.repository.jdbc.entity.StationTemplate;
 
 import java.util.List;
 
